@@ -1,0 +1,51 @@
+<html>
+    <head></head>
+    <body>
+        <form id="formId" action="http://192.168.0.15:3000/fileUpload" method="post" enctype="multipart/form-data">
+            <input id="fileId" type="file" name="file">
+            <input id="previewId" type="button" value="Preview">
+            <input id="btnId" type="button" value="Enviar">
+            <input id="btnId2" type="button" value="Enviar 2">
+            <input id="btnId2" type="submit" value="Submit">
+        </form>    
+        <iframe id='my_iframe' name='my_iframe' src="" style="display:none"></iframe>
+        <img src="" id="previewImg"/>        
+        <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script src="./formdata.js"></script>
+        <script type="text/javascript">
+           $(document).ready(function(){
+             $("#btnId").click(function(){                 
+                 var formData = new FormData(document.forms.namedItem("formId"))                                                   
+                 $.ajax({
+                    url: 'http://192.168.0.15:3000/fileUpload',
+                    method: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success:function(json){
+                        alert(json.toString());    
+                    },
+                    error:function(err){
+                        alert("Error "+err.toString());
+                    } 
+                 })
+             });  
+               
+            $("#btnId2").click(function(){                 
+                document.getElementById('formId').target = 'my_iframe';
+                document.getElementById('formId').submit();
+             });  
+            
+            $("#previewId").click(function(){                 
+                var file = $("#fileId").prop("files")[0];
+                var fileReader = new FileReader();
+                fileReader.onload = function(fileLoadedEvent) {			      
+                  $("#previewImg").attr("src",fileLoadedEvent.target.result)    
+		        };
+		        fileReader.readAsDataURL(file);
+             });    
+               
+           });
+        </script>
+    </body>
+</html>
